@@ -47,9 +47,16 @@ bool mp_obj_instance_is_callable(mp_obj_t self_in);
 mp_obj_t mp_obj_instance_call(mp_obj_t self_in, size_t n_args, size_t n_kw, const mp_obj_t *args);
 
 #define mp_obj_is_instance_type(type) ((type)->make_new == mp_obj_instance_make_new)
+#define mp_obj_is_instance_dict_type(type) ((type)->attr == mp_obj_instance_attr)
+#if MICROPY_PY_CLASS_SLOTS
+#define mp_obj_is_instance_slots_type(type) ((type)->attr != mp_obj_instance_attr)
+#else
+#define mp_obj_is_instance_slots_type(type) 0
+#endif
 #define mp_obj_is_native_type(type) ((type)->make_new != mp_obj_instance_make_new)
 // this needs to be exposed for the above macros to work correctly
 mp_obj_t mp_obj_instance_make_new(const mp_obj_type_t *self_in, size_t n_args, size_t n_kw, const mp_obj_t *args);
+void mp_obj_instance_attr(mp_obj_t self_in, qstr attr, mp_obj_t *dest);
 
 // this needs to be exposed for mp_getiter
 mp_obj_t mp_obj_instance_getiter(mp_obj_t self_in, mp_obj_iter_buf_t *iter_buf);
