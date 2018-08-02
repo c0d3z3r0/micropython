@@ -30,7 +30,6 @@ except TypeError:
 
 print("%s" % True)
 print("%s" % 1)
-print("%.1s" % "ab")
 
 print("%r" % True)
 print("%r" % 1)
@@ -39,6 +38,9 @@ print("%c" % 48)
 print("%c" % 'a')
 print("%10s" % 'abc')
 print("%-10s" % 'abc')
+print("%.1s" % "ab")
+print("%10.2s" % "abc")
+print("%-10.2s" % "abc")
 
 print('%c' % False)
 print('%c' % True)
