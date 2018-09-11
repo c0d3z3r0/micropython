@@ -342,4 +342,14 @@ void mp_unix_mark_exec(void);
 #include <stdio.h>
 #endif
 
+#ifdef MP_FROZEN_TESTSUITE
+#include "lib/upytesthelper/upytesthelper.h"
+#undef MP_PLAT_PRINT_STRN
+#define MP_PLAT_PRINT_STRN(str, len) upytest_output(str, len)
+#undef MICROPY_ERROR_PRINTER
+#define MICROPY_ERROR_PRINTER (&mp_plat_print)
+// Somewhat hacky way to deinitialize mmap_region_head
+#define MICROPY_PORT_DEINIT_FUNC MP_STATE_VM(mmap_region_head) = NULL
+#endif
+
 #endif // MICROPY_UNIX_MINIMAL
