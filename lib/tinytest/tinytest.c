@@ -234,6 +234,8 @@ testcase_run_one(const struct testgroup_t *group,
 		return SKIP;
 	}
 
+	cur_test_prefix = group->prefix;
+	cur_test_name = testcase->name;
 	if (opt_verbosity>0 && !opt_forked) {
 		printf("%s%s: ", group->prefix, testcase->name);
 	} else {
