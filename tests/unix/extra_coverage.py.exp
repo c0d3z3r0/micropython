@@ -23,8 +23,8 @@ sts
 
 test
 tes
-RuntimeError: 
-RuntimeError: 
+RuntimeError:
+RuntimeError:
 # repl
 ame__
 
@@ -34,6 +34,7 @@ implementation  maxsize         modules         path
 platform        print_exception                 stderr
 stdin           stdout          version         version_info
 ementation
+atexit intern
 # attrtuple
 (start=1, stop=2, step=3)
 # str
@@ -58,7 +59,7 @@ TypeError: unsupported types for __divmod__: 'str', 'str'
 2
 OverflowError: overflow converting long int to machine word
 OverflowError: overflow converting long int to machine word
-ValueError: 
+ValueError:
 Warning: test
 # format float
 ?
@@ -80,8 +81,8 @@ unlocked
 1
 2
 3
-KeyboardInterrupt: 
-KeyboardInterrupt: 
+KeyboardInterrupt:
+KeyboardInterrupt:
 10
 # ringbuf
 99 0
