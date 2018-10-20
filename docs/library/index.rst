@@ -129,6 +129,15 @@ To write portable code use functions and classes from the :mod:`machine` module.
 To access platform-specific hardware use the appropriate library, e.g.
 :mod:`pyb` in the case of the Pyboard.
 
+Libraries specific to the Unix port
+-----------------------------------
+
+The following libraries are specific to the `MicroPython Unix port`.
+
+.. toctree::
+  :maxdepth: 2
+
+  ffi.rst
 
 Libraries specific to the pyboard
 ---------------------------------
