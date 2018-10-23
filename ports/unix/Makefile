@@ -236,6 +236,18 @@ test_gcov: test_full
 	gcov -o $(BUILD)/py $(TOP)/py/*.c
 	gcov -o $(BUILD)/extmod $(TOP)/extmod/*.c
 
+dev:
+	$(MAKE) BUILD=build-dev PROG=micropython-dev \
+	    CFLAGS_EXTRA='-DMP_CONFIGFILE="<mpconfigport_dev.h>" -UNDEBUG' LDFLAGS_EXTRA=-rdynamic
+
+# based on coverage_test
+dev_test: dev
+	$(eval DIRNAME=ports/$(notdir $(CURDIR)))
+	cd $(TOP)/tests && MICROPY_MICROPYTHON=../$(DIRNAME)/micropython-dev MICROPYPATH= ./run-tests
+#	cd $(TOP)/tests && MICROPY_MICROPYTHON=../$(DIRNAME)/micropython-dev ./run-tests -d thread
+#	cd $(TOP)/tests && MICROPY_MICROPYTHON=../$(DIRNAME)/micropython-dev ./run-tests --emit native
+#	cd $(TOP)/tests && MICROPY_MICROPYTHON=../$(DIRNAME)/micropython-dev ./run-tests --via-mpy -d basics float
+
 # Value of configure's --host= option (required for cross-compilation).
 # Deduce it from CROSS_COMPILE by default, but can be overridden.
 ifneq ($(CROSS_COMPILE),)
