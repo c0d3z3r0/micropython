@@ -31,12 +31,34 @@ Glossary
         pre-compile source code offline using the :term:`cross-compiler`.
 
     callee-owned tuple
-        This is a MicroPython-specific construct where, for efficiency
-        reasons, some built-in functions or methods may re-use the same
-        underlying tuple object to return data. This avoids having to allocate
-        a new tuple for every call, and reduces heap fragmentation. Programs
-        should not hold references to callee-owned tuples and instead only
-        extract data from them (or make a copy).
+        A tuple returned by some builtin function/method, containing data
+        which is valid for a limited time, usually until next call to the
+        same function (or a group of related functions). After next call,
+        data in the tuple may be changed. This leads to the following
+        restriction on the usage of callee-owned tuples - references to
+        them cannot be stored. The only valid operation is extracting
+        values from them (including making a copy). Callee-owned tuples
+        is a MicroPython-specific construct (not available in the general
+        Python language), introduced for memory allocation optimization.
+        The idea is that callee-owned tuple is allocated once and stored
+        on the callee side. Subsequent calls don't require allocation,
+        allowing to return multiple values when allocation is not possible
+        (e.g. in interrupt context) or not desirable (because allocation
+        inherently leads to memory fragmentation). Note that callee-owned
+        tuples are effectively mutable tuples, making an exception to
+        Python's rule that tuples are immutable. (It may be interesting
+        why tuples were used for such a purpose then, instead of mutable
+        lists - the reason for that is that lists are mutable from user
+        application side too, so a user could do things to a callee-owned
+        list which the callee doesn't expect and could lead to problems;
+        a tuple is protected from this.) There is another way to summarize
+        the situation: a callee-owned tuple is a special subtype of the
+        normal `tuple` type, with the semantics described above, namely:
+        a user application cannot change its contents, but some special
+        functions can. In the current implementation, this special subtype
+        actually coincides with the main tuple type for efficiency reasons
+        (and this is an implementation detail with which users should not
+        be concerned).
 
     CircuitPython
         A variant of MicroPython developed by `Adafruit Industries
