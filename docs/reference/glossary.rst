@@ -30,6 +30,11 @@ Glossary
         MicroPython both use bytecode, the format is different. You can also
         pre-compile source code offline using the :term:`cross-compiler`.
 
+    buffer
+        An object implementing a buffer protocol. The simplest examples of
+        buffers are `bytes` (read-only buffer) and `bytearray` (read-write
+        buffer).
+
     callee-owned tuple
         A tuple returned by some builtin function/method, containing data
         which is valid for a limited time, usually until next call to the
@@ -101,6 +106,27 @@ Glossary
     Garbage Collector
         A background process that runs in Python (and MicroPython) to reclaim
         unused memory in the :term:`heap`.
+
+    fragmentation
+        Fragmentation is a phenomenon of any dynamic memory allocation
+        system when free memory is spread across a number of chunks,
+        so while total amount of free memory may be high, allocating
+        a contiguous chunk of memory is possible only within the size
+        of the largest free chunk. Note that fragmentation is not just
+        an issue of scripting languages or MicroPython in particular,
+        a C program performing dynamic allocation is subject to the
+        same issues. To understand a problem better, consider following
+        example: there're 4K of memory total, and application consecutively
+        allocates 1K chunks, numbered #0, #1, #2, #3. Then if application
+        frees chunks #1 and #3, there're total 2K of free memory. However,
+        it's possible to allocate a chunk with the maximum size of 1K only.
+        Measures to fight fragmentation include: 1) preallocation (static
+        allocation) and inplace operations; 2) compacting garbage
+        collection. Static allocation is a well-known technique oftentimes
+        used in C. Unlike many other scripting languages, Python provides
+        excelent capabilities for inplace operations on preallocated
+        buffers and objects, and MicroPython extends it even further.
+        Compacting garbage collection is however an open topic.
 
     GPIO
         General-purpose input/output. The simplest means to control electrical
