@@ -1526,6 +1526,10 @@ NORETURN void mp_raise_msg_varg(const mp_obj_type_t *exc_type, const char *fmt, 
     nlr_raise(exc);
 }
 
+NORETURN void mp_raise_IndexError(const char *msg) {
+    mp_raise_msg(&mp_type_IndexError, msg);
+}
+
 NORETURN void mp_raise_ValueError(const char *msg) {
     mp_raise_msg(&mp_type_ValueError, msg);
 }
