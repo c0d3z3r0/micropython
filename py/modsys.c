@@ -264,6 +264,9 @@ STATIC const mp_rom_map_elem_t mp_module_sys_globals_table[] = {
     #if MICROPY_PY_SYS_ATEXIT
     { MP_ROM_QSTR(MP_QSTR_atexit), MP_ROM_PTR(&mp_sys_atexit_obj) },
     #endif
+    #if MICROPY_PY_SYS_ROPROXY
+    { MP_ROM_QSTR(MP_QSTR_roproxy), MP_ROM_PTR(&mp_type_roproxy) },
+    #endif
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_sys_globals, mp_module_sys_globals_table);
