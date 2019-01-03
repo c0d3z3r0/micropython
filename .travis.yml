@@ -243,6 +243,15 @@ jobs:
       after_failure:
         - tests/run-tests --print-failures
 
+    # unix port with clang
+    - stage: test
+      env: NAME="unix port with clang"
+      script:
+        - git submodule update --init lib/axtls lib/berkeley-db-1.xx lib/libffi
+        - make ${MAKEOPTS} CC=clang -C mpy-cross
+        - make ${MAKEOPTS} CC=clang -C ports/unix
+        - make ${MAKEOPTS} CC=clang -C ports/unix test
+
     # unix with sys.settrace
     - stage: test
       env: NAME="unix port with sys.settrace build and tests"
