@@ -12,4 +12,14 @@ if bdev:
 
         inisetup.setup()
 
+# Import config
+from config import config
+
+# Debug
+import esp
+if config('debug'):
+    esp.osdebug(0)
+else:
+    esp.osdebug(None)
+
 gc.collect()
