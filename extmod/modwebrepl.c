@@ -71,7 +71,7 @@ STATIC const char passwd_prompt[] = "Password: ";
 STATIC const char connected_prompt[] = "\r\nWebREPL connected\r\n>>> ";
 STATIC const char denied_prompt[] = "\r\nAccess denied\r\n";
 
-STATIC char webrepl_passwd[10];
+STATIC char webrepl_passwd[128];
 
 STATIC void write_webrepl(mp_obj_t websock, const void *buf, size_t len) {
     const mp_stream_p_t *sock_stream = mp_get_stream(websock);
