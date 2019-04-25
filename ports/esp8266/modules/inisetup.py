@@ -2,15 +2,6 @@ import uos
 import network
 from flashbdev import bdev
 
-
-def wifi():
-    import ubinascii
-
-    ap_if = network.WLAN(network.AP_IF)
-    essid = b"MicroPython-%s" % ubinascii.hexlify(ap_if.config("mac")[-3:])
-    ap_if.config(essid=essid, authmode=network.AUTH_WPA_WPA2_PSK, password=b"micropythoN")
-
-
 def check_bootsec():
     buf = bytearray(bdev.SEC_SIZE)
     bdev.readblocks(0, buf)
@@ -44,7 +35,7 @@ programming).
 def setup():
     check_bootsec()
     print("Performing initial setup")
-    wifi()
+    network.WLAN(network.AP_IF).active(False)
     uos.VfsLfs2.mkfs(bdev)
     vfs = uos.VfsLfs2(bdev)
     uos.mount(vfs, "/")
