@@ -60,20 +60,20 @@ def stop():
 
 
 def start(port=8266, password=None):
+
     stop()
+
     if password is None:
         try:
             import webrepl_cfg
-
-            _webrepl.password(webrepl_cfg.PASS)
-            setup_conn(port, accept_conn)
-            print("Started webrepl in normal mode")
+            password = _webrepl.password(webrepl_cfg.PASS)
         except:
-            print("WebREPL is not configured, run 'import webrepl_setup'")
-    else:
-        _webrepl.password(password)
-        setup_conn(port, accept_conn)
-        print("Started webrepl in manual override mode")
+            password = '1234'
+            print("WebREPL password is not configured, using default 1234")
+
+    _webrepl.password(password)
+    setup_conn(port, accept_conn)
+    print("Started webrepl")
 
 
 def start_foreground(port=8266):
