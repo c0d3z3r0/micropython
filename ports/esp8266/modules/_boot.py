@@ -22,4 +22,10 @@ if config('debug'):
 else:
     esp.osdebug(None)
 
+# Start webrepl
+wrcfg = config('webrepl')
+if wrcfg.get('enabled'):
+    import webrepl
+    webrepl.start()
+
 gc.collect()

@@ -6,6 +6,8 @@ import uwebsocket
 import websocket_helper
 import _webrepl
 
+from config import config
+
 listen_s = None
 client_s = None
 
@@ -64,10 +66,9 @@ def start(port=8266, password=None):
     stop()
 
     if password is None:
-        try:
-            import webrepl_cfg
-            password = _webrepl.password(webrepl_cfg.PASS)
-        except:
+        cfg = config('webrepl')
+        password = cfg.get('password')
+        if not password:
             password = '1234'
             print("WebREPL password is not configured, using default 1234")
 
