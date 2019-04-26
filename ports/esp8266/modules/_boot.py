@@ -48,6 +48,16 @@ if wificfg.get('ssid'):
         import machine
         machine.reset()
 
+# Set NTP host and set up ntp update cronjob
+ntpcfg = config('ntp')
+if ntpcfg.get('enabled'):
+    import ntptime, machine
+    ntptime.host = ntpcfg.get('srv')
+    _ntptimer = machine.Timer(-1)
+    _ntptimer.init(period=ntpcfg.get('freq')*1000,
+                   callback=lambda t: ntptime.settime())
+    ntptime.settime()
+
 # Start webrepl
 wrcfg = config('webrepl')
 if wrcfg.get('enabled'):
