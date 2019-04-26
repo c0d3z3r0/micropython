@@ -22,6 +22,32 @@ if config('debug'):
 else:
     esp.osdebug(None)
 
+# Wifi setup
+wificfg = config('wifi')
+if wificfg.get('ssid'):
+    import network, time
+    sta_if = network.WLAN(network.STA_IF)
+    try:
+        sta_if.disconnect()
+    except:
+        pass
+    sta_if.active(True)
+    if wificfg.get('ip'):
+        sta_if.ifconfig((
+            wificfg.get('ip',   ''),
+            wificfg.get('mask', ''),
+            wificfg.get('gw', ''),
+            wificfg.get('dns', ''),
+        ))
+    sta_if.connect(wificfg['ssid'], wificfg['psk'])
+    for i in range(0,10):
+        time.sleep(1)
+        if sta_if.isconnected():
+            break
+    if not sta_if.isconnected():
+        import machine
+        machine.reset()
+
 # Start webrepl
 wrcfg = config('webrepl')
 if wrcfg.get('enabled'):
