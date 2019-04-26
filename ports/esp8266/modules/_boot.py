@@ -1,6 +1,9 @@
+# Init gc
 import gc
 
 gc.threshold((gc.mem_free() + gc.mem_alloc()) // 4)
+
+# Mount filesystem
 import uos
 from flashbdev import bdev
 
@@ -64,4 +67,5 @@ if wrcfg.get('enabled'):
     import webrepl
     webrepl.start()
 
+# Cleanup
 gc.collect()
