@@ -3,6 +3,7 @@ import sys
 # import uos as os
 import os
 import machine
+import webrepl
 from config import config
 
 
@@ -58,16 +59,10 @@ def main():
             cfg['password'] = passwd
             config('webrepl', cfg)
 
-    if resp not in ("D", "E") or (resp == "D" and not status) or (resp == "E" and status):
-        print("No further action required")
-        sys.exit()
-
     change_daemon(resp == "E")
 
-    print("Changes will be activated after reboot")
-    resp = input_choice("Would you like to reboot now? (y/n) ", ("y", "n", ""))
-    if resp == "y":
-        machine.reset()
+    if resp == "E":
+        webrepl.start()
 
 
 main()
