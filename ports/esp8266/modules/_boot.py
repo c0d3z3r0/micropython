@@ -3,6 +3,10 @@ import gc
 
 gc.threshold((gc.mem_free() + gc.mem_alloc()) // 4)
 
+# Debug
+import esp
+esp.osdebug(0)
+
 # Mount filesystem
 import uos
 from flashbdev import bdev
@@ -19,10 +23,7 @@ if bdev:
 from config import config
 
 # Debug
-import esp
-if config('debug'):
-    esp.osdebug(0)
-else:
+if not config('debug'):
     esp.osdebug(None)
 
 # Wifi setup
