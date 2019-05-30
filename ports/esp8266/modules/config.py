@@ -28,7 +28,7 @@ def config(name, value=None):
   except:
     conf = defconfig
 
-  if value:
+  if value is not None:
     conf.update({name: value})
     with open('config.json', 'w') as c:
       c.write(json.dumps(conf))
