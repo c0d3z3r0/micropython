@@ -25,7 +25,7 @@ $(1)_TARGETS = $$(addprefix $(1)-,$$(_$(1)_TARGETS))
 $$($(1)_TARGETS):
 
 $(1)-%:
-	$$(MAKE) ports/esp8266 SUB=$$*
+	$$(MAKE) ports/$(1) SUB=$$*
 
 $(1)-install-modules: unix
 ifeq ($$(MODS),)
