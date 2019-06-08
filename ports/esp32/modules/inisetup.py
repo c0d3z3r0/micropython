@@ -1,3 +1,4 @@
+import network
 import uos
 from flashbdev import bdev
 
@@ -33,17 +34,8 @@ by firmware programming).
 def setup():
     check_bootsec()
     print("Performing initial setup")
+    network.WLAN(network.AP_IF).active(False)
     uos.VfsLfs2.mkfs(bdev)
     vfs = uos.VfsLfs2(bdev)
     uos.mount(vfs, "/")
-    with open("boot.py", "w") as f:
-        f.write(
-            """\
-# This file is executed on every boot (including wake-boot from deepsleep)
-#import esp
-#esp.osdebug(None)
-#import webrepl
-#webrepl.start()
-"""
-        )
     return vfs
