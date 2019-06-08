@@ -146,6 +146,20 @@ ifneq ($(FROZEN_MPY_DIR),)
 $(info Warning: FROZEN_MPY_DIR is deprecated in favour of FROZEN_MANIFEST)
 # make a list of all the .py files that need compiling and freezing
 FROZEN_MPY_PY_FILES := $(shell find -L $(FROZEN_MPY_DIR) -type f -name '*.py' | $(SED) -e 's=^$(FROZEN_MPY_DIR)/==')
+# exclude disabled modules
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_PY_WEBREPL:0=), webrepl webrepl_setup)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_PY_UWEBSOCKET:0=), websocket_helper)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_APA106:0=), apa106)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_NEOPIXEL:0=), neopixel)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_DHT:0=), dht)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_DS18X20:0=), ds18x20)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_ONEWIRE:0=), onewire)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_UPIP:0=), upip upip_utarfile)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_UPYSH:0=), upysh)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_UREQUESTS:0=), urequests/%)
+FROZEN_MPY_PY_FILES_EXCLUDE += $(if $(MICROPY_UMQTT:0=), umqtt/%)
+FROZEN_MPY_PY_FILES := $(filter-out $(FROZEN_MPY_PY_FILES_EXCLUDE:=.py), $(FROZEN_MPY_PY_FILES))
+# make a list of mpy files
 FROZEN_MPY_MPY_FILES := $(addprefix $(BUILD)/frozen_mpy/,$(FROZEN_MPY_PY_FILES:.py=.mpy))
 
 # to build .mpy files from .py files

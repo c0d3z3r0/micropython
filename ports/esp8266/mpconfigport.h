@@ -100,8 +100,13 @@
 #define MICROPY_FATFS_RPATH            (2)
 #define MICROPY_FATFS_MAX_SS           (4096)
 #define MICROPY_FATFS_LFN_CODE_PAGE    437 /* 1=SFN/ANSI 437=LFN/U.S.(OEM) */
-#define MICROPY_ESP8266_APA102         (1)
-#define MICROPY_ESP8266_NEOPIXEL       (1)
+
+#define MICROPY_APA102                 (1)
+#define MICROPY_NEOPIXEL               (1)
+#define MICROPY_DHT                    (1)
+#define MICROPY_DS18X20                (1)
+#define MICROPY_ONEWIRE                (1)
+#define MICROPY_UPIP                   (1)
 
 #define MICROPY_EVENT_POLL_HOOK {ets_event_poll();}
 #define MICROPY_VM_HOOK_COUNT (10)
@@ -164,7 +169,16 @@ extern const struct _mp_obj_module_t utime_module;
 extern const struct _mp_obj_module_t uos_module;
 extern const struct _mp_obj_module_t mp_module_lwip;
 extern const struct _mp_obj_module_t mp_module_machine;
+#if MICROPY_ONEWIRE
 extern const struct _mp_obj_module_t mp_module_onewire;
+#endif
+
+#if MICROPY_ONEWIRE
+#define BUILTIN_MODULE_ONEWIRE \
+    { MP_ROM_QSTR(MP_QSTR__onewire), MP_ROM_PTR(&mp_module_onewire) },
+#else
+#define BUILTIN_MODULE_ONEWIRE
+#endif
 
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_ROM_QSTR(MP_QSTR_esp), MP_ROM_PTR(&esp_module) }, \
@@ -173,7 +187,7 @@ extern const struct _mp_obj_module_t mp_module_onewire;
     { MP_ROM_QSTR(MP_QSTR_utime), MP_ROM_PTR(&utime_module) }, \
     { MP_ROM_QSTR(MP_QSTR_uos), MP_ROM_PTR(&uos_module) }, \
     { MP_ROM_QSTR(MP_QSTR_machine), MP_ROM_PTR(&mp_module_machine) }, \
-    { MP_ROM_QSTR(MP_QSTR__onewire), MP_ROM_PTR(&mp_module_onewire) }, \
+    BUILTIN_MODULE_ONEWIRE
 
 #define MP_STATE_PORT MP_STATE_VM
 

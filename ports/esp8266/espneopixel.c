@@ -6,7 +6,7 @@
 // Needs to be a separate .c file to enforce ICACHE_RAM_ATTR execution.
 
 #include "py/mpconfig.h"
-#if MICROPY_ESP8266_NEOPIXEL
+#if MICROPY_NEOPIXEL
 
 #include "c_types.h"
 #include "eagle_soc.h"
@@ -72,4 +72,4 @@ void /*ICACHE_RAM_ATTR*/ esp_neopixel_write(uint8_t pin, uint8_t *pixels, uint32
     mp_hal_quiet_timing_exit(irq_state);
 }
 
-#endif // MICROPY_ESP8266_NEOPIXEL
+#endif // MICROPY_NEOPIXEL

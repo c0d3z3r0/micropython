@@ -172,6 +172,16 @@
 #define mp_type_fileio                      mp_type_vfs_fat_fileio
 #define mp_type_textio                      mp_type_vfs_fat_textio
 
+#define MICROPY_APA106                      (1)
+#define MICROPY_NEOPIXEL                    (1)
+#define MICROPY_DHT                         (1)
+#define MICROPY_DS18X20                     (1)
+#define MICROPY_ONEWIRE                     (1)
+#define MICROPY_UPIP                        (1)
+#define MICROPY_UPYSH                       (1)
+#define MICROPY_UREQUESTS                   (1)
+#define MICROPY_UMQTT                       (1)
+
 // use vfs's functions for import stat and builtin open
 #define mp_import_stat mp_vfs_import_stat
 #define mp_builtin_open mp_vfs_open
@@ -190,7 +200,16 @@ extern const struct _mp_obj_module_t uos_module;
 extern const struct _mp_obj_module_t mp_module_usocket;
 extern const struct _mp_obj_module_t mp_module_machine;
 extern const struct _mp_obj_module_t mp_module_network;
+#if MICROPY_ONEWIRE
 extern const struct _mp_obj_module_t mp_module_onewire;
+#endif
+
+#if MICROPY_ONEWIRE
+#define BUILTIN_MODULE_ONEWIRE \
+    { MP_OBJ_NEW_QSTR(MP_QSTR__onewire), (mp_obj_t)&mp_module_onewire },
+#else
+#define BUILTIN_MODULE_ONEWIRE
+#endif
 
 #define MICROPY_PORT_BUILTIN_MODULES \
     { MP_OBJ_NEW_QSTR(MP_QSTR_esp), (mp_obj_t)&esp_module }, \
@@ -200,7 +219,7 @@ extern const struct _mp_obj_module_t mp_module_onewire;
     { MP_OBJ_NEW_QSTR(MP_QSTR_usocket), (mp_obj_t)&mp_module_usocket }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR_machine), (mp_obj_t)&mp_module_machine }, \
     { MP_OBJ_NEW_QSTR(MP_QSTR_network), (mp_obj_t)&mp_module_network }, \
-    { MP_OBJ_NEW_QSTR(MP_QSTR__onewire), (mp_obj_t)&mp_module_onewire }, \
+    BUILTIN_MODULE_ONEWIRE \
     { MP_OBJ_NEW_QSTR(MP_QSTR_uhashlib), (mp_obj_t)&mp_module_uhashlib }, \
 
 #define MP_STATE_PORT MP_STATE_VM

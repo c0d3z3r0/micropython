@@ -6,6 +6,8 @@
 // Needs to be a separate .c file to enforce ICACHE_RAM_ATTR execution.
 
 #include "py/mpconfig.h"
+#if MICROPY_NEOPIXEL
+
 #include "py/mphal.h"
 #include "modesp.h"
 
@@ -61,3 +63,5 @@ void IRAM_ATTR esp_neopixel_write(uint8_t pin, uint8_t *pixels, uint32_t numByte
     }
     mp_hal_quiet_timing_exit(irq_state);
 }
+
+#endif // MICROPY_NEOPIXEL
