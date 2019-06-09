@@ -66,7 +66,7 @@ if ntpcfg.get('enabled'):
 wrcfg = config('webrepl')
 if wrcfg.get('enabled'):
     import webrepl
-    webrepl.start()
+    webrepl.start(password=wrcfg.get('password'))
 
 # Cleanup
 gc.collect()
