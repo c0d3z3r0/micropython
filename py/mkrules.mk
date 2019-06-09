@@ -162,8 +162,11 @@ FROZEN_MPY_PY_FILES := $(filter-out $(FROZEN_MPY_PY_FILES_EXCLUDE:=.py), $(FROZE
 # make a list of mpy files
 FROZEN_MPY_MPY_FILES := $(addprefix $(BUILD)/frozen_mpy/,$(FROZEN_MPY_PY_FILES:.py=.mpy))
 
+$(MPY_CROSS):
+	$(MAKE) -C $(dir $(MPY_CROSS))
+
 # to build .mpy files from .py files
-$(BUILD)/frozen_mpy/%.mpy: $(FROZEN_MPY_DIR)/%.py
+$(BUILD)/frozen_mpy/%.mpy: $(FROZEN_MPY_DIR)/%.py $(MPY_CROSS)
 	@$(ECHO) "MPY $<"
 	$(Q)$(MKDIR) -p $(dir $@)
 	$(Q)$(MPY_CROSS) -o $@ -s $(<:$(FROZEN_MPY_DIR)/%=%) $(MPY_CROSS_FLAGS) $<
