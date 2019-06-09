@@ -42,11 +42,10 @@ include $(TOP)/py/py.mk
 
 GIT_SUBMODULES = lib/berkeley-db-1.xx
 
-PORT ?= /dev/ttyUSB0
-BAUD ?= 460800
-FLASH_MODE ?= dio
-FLASH_FREQ ?= 40m
-FLASH_SIZE ?= 4MB
+ESPTOOL_FF ?= 80m
+ESPTOOL_BAUD ?= 921600
+export ESPTOOL_FF ESPTOOL_BAUD
+
 CROSS_COMPILE ?= xtensa-esp32-elf-
 OBJDUMP = $(CROSS_COMPILE)objdump
 
@@ -734,11 +733,11 @@ $(BUILD)/firmware.bin: $(BUILD)/bootloader.bin $(BUILD)/partitions.bin $(BUILD)/
 
 deploy: $(BUILD)/firmware.bin
 	$(ECHO) "Writing $^ to the board"
-	$(Q)$(ESPTOOL) --chip esp32 --port $(PORT) --baud $(BAUD) write_flash -z --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) 0x1000 $^
+	$(Q)$(ESPTOOL) --chip esp32 write_flash -z 0x1000 $^
 
 erase:
 	$(ECHO) "Erasing flash"
-	$(Q)$(ESPTOOL) --chip esp32 --port $(PORT) --baud $(BAUD) erase_flash
+	$(Q)$(ESPTOOL) --chip esp32 erase_flash
 
 ################################################################################
 # Declarations to build the application
@@ -770,7 +769,7 @@ $(BUILD)/esp32_out.ld: $(SDKCONFIG_H)
 
 $(BUILD)/application.bin: $(BUILD)/application.elf
 	$(ECHO) "Create $@"
-	$(Q)$(ESPTOOL) --chip esp32 elf2image --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) --flash_size $(FLASH_SIZE) $<
+	$(Q)$(ESPTOOL) --chip esp32 elf2image $<
 
 $(BUILD)/application.elf: $(OBJ) $(LIB) $(BUILD)/esp32_out.ld $(BUILD)/esp32.project.ld
 	$(ECHO) "LINK $@"
@@ -957,7 +956,7 @@ $(BUILD)/bootloader/%.o: %.c
 
 $(BUILD)/bootloader.bin: $(BUILD)/bootloader.elf
 	$(ECHO) "Create $@"
-	$(Q)$(ESPTOOL) --chip esp32 elf2image --flash_mode $(FLASH_MODE) --flash_freq $(FLASH_FREQ) --flash_size $(FLASH_SIZE) $<
+	$(Q)$(ESPTOOL) --chip esp32 elf2image --flash_mode=dio $<
 
 $(BUILD)/bootloader.elf: $(BOOTLOADER_OBJ) $(addprefix $(BOOTLOADER_LIB_DIR)/lib,$(addsuffix .a,$(BOOTLOADER_LIB_ALL)))
 	$(ECHO) "LINK $@"
