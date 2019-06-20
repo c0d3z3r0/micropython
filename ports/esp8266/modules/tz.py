@@ -34,6 +34,6 @@ def localtime(ts=None):
 def mktime(lt):
     ts = utime.mktime(lt)
     ts -= TZ * 3600
-    if lt[8] == 1:
+    if lt[8] == 1 or (lt[8] == -1 and isdst(ts)):
         ts -= 3600
     return ts
