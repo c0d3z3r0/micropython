@@ -112,6 +112,7 @@
 #define MICROPY_PY_IO_FILEIO                (1)
 #define MICROPY_PY_IO_BYTESIO               (1)
 #define MICROPY_PY_IO_BUFFEREDWRITER        (1)
+#define MICROPY_PY_IO_BUFFEREDREADER        (1)
 #define MICROPY_PY_STRUCT                   (1)
 #define MICROPY_PY_SYS                      (1)
 #define MICROPY_PY_SYS_MAXSIZE              (1)
