@@ -99,6 +99,7 @@ def uimports(code):
     for uimport in UIMPORTLIST:
         uimport = bytes(uimport, "utf8")
         code = code.replace(uimport, b"u" + uimport)
+        code = code.replace(b"import " + uimport, b"import u" + uimport + b" as " + uimport)
     return code
 
 
