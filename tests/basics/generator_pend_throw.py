@@ -26,6 +26,7 @@ except Exception as e:
 
 print("ret was:", v)
 
+#<<<<<<< HEAD
 
 # Verify that pend_throw works on an unstarted coroutine.
 g = gen()
@@ -99,3 +100,14 @@ next(g)
 g.pend_throw(CancelledError())
 print(repr(g.pend_throw(None)))
 print(next(g))
+
+#=======
+## It's legal to pend exception in a just-started generator, just the same
+## as it's legal to .throw() into it.
+#g = gen()
+#g.pend_throw(ValueError())
+#try:
+#    next(g)
+#except ValueError:
+#    print("ValueError from just-started gen")
+#>>>>>>> tests/generator_pend_throw: It's now allowed to pend_throw() just started gen.

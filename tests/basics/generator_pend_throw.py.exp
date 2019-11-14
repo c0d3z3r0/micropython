@@ -2,6 +2,7 @@
 1
 raised ValueError()
 ret was: None
+#<<<<<<< HEAD
 raised OSError()
 raised ValueError('generator already executing',)
 raised ValueError('generator already executing',)
@@ -13,3 +14,6 @@ None
 CancelledError()
 CancelledError()
 1
+#=======
+#ValueError from just-started gen
+#>>>>>>> tests/generator_pend_throw: It's now allowed to pend_throw() just started gen.
