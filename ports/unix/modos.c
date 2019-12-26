@@ -49,12 +49,17 @@
 #define USE_STATFS 1
 #endif
 
-STATIC mp_obj_t mod_os_stat(mp_obj_t path_in) {
+STATIC mp_obj_t mod_os_stat(size_t n_args, const mp_obj_t *args) {
+    mp_obj_t path_in = args[0];
+    bool follow_symlinks = true;
+    if (n_args > 1) {
+        follow_symlinks = mp_obj_is_true(args[1]);
+    }
     struct stat sb;
     const char *path = mp_obj_str_get_str(path_in);
 
     int res;
-    MP_HAL_RETRY_SYSCALL(res, stat(path, &sb), mp_raise_OSError(err));
+    MP_HAL_RETRY_SYSCALL(res, (follow_symlinks ? stat : lstat)(path, &sb), mp_raise_OSError(err));
 
     mp_obj_tuple_t *t = MP_OBJ_TO_PTR(mp_obj_new_tuple(10, NULL));
     t->items[0] = MP_OBJ_NEW_SMALL_INT(sb.st_mode);
@@ -69,7 +74,7 @@ STATIC mp_obj_t mod_os_stat(mp_obj_t path_in) {
     t->items[9] = MP_OBJ_NEW_SMALL_INT(sb.st_ctime);
     return MP_OBJ_FROM_PTR(t);
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(mod_os_stat_obj, mod_os_stat);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_os_stat_obj, 1, 2, mod_os_stat);
 
 #if MICROPY_PY_OS_STATVFS
 
