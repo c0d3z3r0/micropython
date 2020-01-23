@@ -117,6 +117,14 @@ Browse available modules on
 Standard library modules come from
 [micropython-lib](https://github.com/micropython/micropython-lib) project.
 
+`pycopy` executable built following the instructions above is a
+"production" executable for native Pycopy software. It's also possible
+to build `pycop-dev` executable which provides additional reflection,
+diagnostics, and extensibility capabilities, at the expense of code
+size and memory usage efficiency. In particular, `pycopy-dev` is more
+compatible with software written for CPython. To build the `pycopy-dev`
+variant, run `make dev`.
+
 External dependencies
 ---------------------
 
