@@ -54,6 +54,7 @@ PATHS = [
 ]
 
 EXCLUSIONS = [
+    "**/upip*.py",
     # STM32 build includes generated Python code.
     "ports/*/build*",
     # gitignore in ports/unix ignores *.py, so also do it here.
