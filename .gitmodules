@@ -39,3 +39,6 @@
 [submodule "lib/micropython-lib"]
 	path = lib/micropython-lib
 	url = https://github.com/c0d3z3r0/micropython-lib.git
+[submodule "lib/picoweb"]
+	path = lib/picoweb
+	url = https://github.com/c0d3z3r0/picoweb.git
