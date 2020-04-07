@@ -16,6 +16,7 @@ $(_PORTS) $(COMMONS):
 
 clean:
 	$(MAKE) -k $(COMMONS) $(_PORTS) SUB=clean
+	$(MAKE) -C mpy-cross clean
 
 
 define PORT_template =
