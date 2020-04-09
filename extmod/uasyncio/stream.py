@@ -47,7 +47,7 @@ class Stream:
             else:
                 buf += res
                 cnt -= len(res)
-                yield
+                #yield TODO: hangs here
 
             if not cnt:
                 break
