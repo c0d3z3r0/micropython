@@ -4,6 +4,10 @@
 from . import core
 
 
+class IncompleteReadError(EOFError):
+    pass
+
+
 class Stream:
     def __init__(self, s, e={}):
         self.s = s
@@ -29,6 +33,29 @@ class Stream:
     async def read(self, n):
         yield core._io_queue.queue_read(self.s)
         return self.s.read(n)
+
+    async def readexactly(self, n):
+        cnt = n
+        buf = b""
+        while n:
+            yield core._io_queue.queue_read(self.s)
+            res = self.s.read(n)
+            if res is None:
+                continue
+            elif not res:
+                break
+            else:
+                buf += res
+                cnt -= len(res)
+                yield
+
+            if not cnt:
+                break
+
+        if cnt:
+            raise IncompleteReadError("Read %s from %s bytes" % (n - cnt, cnt))
+
+        return buf
 
     async def readline(self):
         l = b""
