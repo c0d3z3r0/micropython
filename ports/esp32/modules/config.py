@@ -1,6 +1,6 @@
 import json
 
-defconfig = {
+_defconfig = {
   'debug': False,
   'wifi': {
     'ssid': '',
@@ -21,16 +21,28 @@ defconfig = {
   },
 }
 
+def _writeconfig(conf):
+  with open('config.json', 'w') as c:
+    c.write(json.dumps(conf))
+
+def _readconfig():
+  with open('config.json', 'r') as c:
+    return json.loads(c.read())
+
 def config(name, value=None):
   try:
-    with open('config.json', 'r') as c:
-      conf = json.loads(c.read())
+    conf = _readconfig()
   except:
-    conf = defconfig
+    try:
+      from defconfig import defconfig
+      conf = _defconfig.copy()
+      conf.update(defconfig)
+      _writeconfig(conf)
+    except:
+      conf = _defconfig.copy()
 
   if value is not None:
     conf.update({name: value})
-    with open('config.json', 'w') as c:
-      c.write(json.dumps(conf))
+    _writeconfig(conf)
   else:
     return conf.get(name, None)
