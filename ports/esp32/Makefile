@@ -83,8 +83,10 @@ ESPCOMP_KCONFIGS_PROJBUILD = $(shell find $(ESPCOMP) -name Kconfig.projbuild)
 ESPIDF_CURHASH := $(shell git -C $(ESPIDF) show -s --pretty=format:'%H')
 
 ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V3))
+ESPIDF_VER = 3
 $(info Building with ESP IDF v3)
 else ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ESPIDF_VER = 4
 $(info Building with ESP IDF v4)
 
 PYPARSING_VERSION = $(shell python3 -c 'import pyparsing; print(pyparsing.__version__)')
@@ -178,7 +180,7 @@ INC_ESPCOMP += -I$(ESPCOMP)/pthread/include
 INC_ESPCOMP += -I$(ESPCOMP)/smartconfig_ack/include
 INC_ESPCOMP += -I$(ESPCOMP)/sdmmc/include
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 INC_ESPCOMP += -I$(ESPCOMP)/esp_common/include
 INC_ESPCOMP += -I$(ESPCOMP)/esp_eth/include
 INC_ESPCOMP += -I$(ESPCOMP)/esp_event/private_include
@@ -265,7 +267,7 @@ CFLAGS += -DIDF_VER=\"$(IDF_VER)\"
 CFLAGS += $(CFLAGS_MOD) $(CFLAGS_EXTRA)
 CFLAGS += -I$(BOARD_DIR)
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 CFLAGS += -DMICROPY_ESP_IDF_4=1
 endif
 
@@ -306,7 +308,7 @@ CFLAGS_COMMON += -mfix-esp32-psram-cache-issue
 LIBC_LIBM = $(ESPCOMP)/newlib/lib/libc-psram-workaround.a $(ESPCOMP)/newlib/lib/libm-psram-workaround.a
 else
 # Additional newlib symbols that can only be used with spiram disabled.
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 LDFLAGS += -T esp32.rom.newlib-funcs.ld
 LDFLAGS += -T esp32.rom.newlib-locale.ld
 LDFLAGS += -T esp32.rom.newlib-data.ld
@@ -450,7 +452,7 @@ ESPIDF_PTHREAD_O = $(patsubst %.c,%.o,$(wildcard $(ESPCOMP)/pthread/*.c))
 # -Os because that generates subtly different code.
 # We also need custom CFLAGS for .c files because FreeRTOS has headers with
 # generic names (eg queue.h) which can clash with other files in the port.
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 CFLAGS_ASM = -I$(BUILD) -I$(ESPCOMP)/esp32/include -I$(ESPCOMP)/soc/esp32/include -I$(ESPCOMP)/freertos/include/freertos -I. -I$(ESPCOMP)/xtensa/include -I$(ESPCOMP)/xtensa/esp32/include -I$(ESPCOMP)/esp_common/include
 else
 CFLAGS_ASM = -I$(BUILD) -I$(ESPCOMP)/esp32/include -I$(ESPCOMP)/soc/esp32/include -I$(ESPCOMP)/freertos/include/freertos -I.
@@ -510,7 +512,7 @@ ESPIDF_MBEDTLS_O = $(patsubst %.c,%.o,\
 
 ESPIDF_MDNS_O = $(patsubst %.c,%.o,$(wildcard $(ESPCOMP)/mdns/*.c))
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 $(BUILD)/$(ESPCOMP)/wpa_supplicant/%.o: CFLAGS += -DESP_SUPPLICANT -DIEEE8021X_EAPOL -DEAP_PEER_METHOD -DEAP_TLS -DEAP_TTLS -DEAP_PEAP -DEAP_MSCHAPv2 -DUSE_WPA2_TASK -DCONFIG_WPS2 -DCONFIG_WPS_PIN -DUSE_WPS_TASK -DESPRESSIF_USE -DESP32_WORKAROUND -DCONFIG_ECC -D__ets__ -Wno-strict-aliasing -I$(ESPCOMP)/wpa_supplicant/src -Wno-implicit-function-declaration
 else
 $(BUILD)/$(ESPCOMP)/wpa_supplicant/%.o: CFLAGS += -DEMBEDDED_SUPP -DIEEE8021X_EAPOL -DEAP_PEER_METHOD -DEAP_MSCHAPv2 -DEAP_TTLS -DEAP_TLS -DEAP_PEAP -DUSE_WPA2_TASK -DCONFIG_WPS2 -DCONFIG_WPS_PIN -DUSE_WPS_TASK -DESPRESSIF_USE -DESP32_WORKAROUND -DALLOW_EVEN_MOD -D__ets__ -Wno-strict-aliasing
@@ -522,7 +524,7 @@ ESPIDF_WPA_SUPPLICANT_O = $(patsubst %.c,%.o,\
 
 ESPIDF_SDMMC_O = $(patsubst %.c,%.o,$(wildcard $(ESPCOMP)/sdmmc/*.c))
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 ESPIDF_ESP_COMMON_O = $(patsubst %.c,%.o,$(wildcard $(ESPCOMP)/esp_common/src/*.c))
 
 ESPIDF_ESP_EVENT_O = $(patsubst %.c,%.o,$(wildcard $(ESPCOMP)/esp_event/*.c))
@@ -634,7 +636,7 @@ $(eval $(call gen_espidf_lib_rule,wpa_supplicant,$(ESPIDF_WPA_SUPPLICANT_O)))
 $(eval $(call gen_espidf_lib_rule,sdmmc,$(ESPIDF_SDMMC_O)))
 $(eval $(call gen_espidf_lib_rule,bt_nimble,$(ESPIDF_BT_NIMBLE_O)))
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 $(eval $(call gen_espidf_lib_rule,esp_common,$(ESPIDF_ESP_COMMON_O)))
 $(eval $(call gen_espidf_lib_rule,esp_event,$(ESPIDF_ESP_EVENT_O)))
 $(eval $(call gen_espidf_lib_rule,esp_wifi,$(ESPIDF_ESP_WIFI_O)))
@@ -661,7 +663,7 @@ LIB = $(foreach lib,$(LIB_ESPIDF),$(BUILD_ESPIDF_LIB)/$(lib)/lib$(lib).a)
 
 LDGEN_FRAGMENTS = $(shell find $(ESPCOMP) -name "*.lf")
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 
 LDGEN_LIBRARIES=$(foreach lib,$(LIB_ESPIDF),$(BUILD_ESPIDF_LIB)/$(lib)/lib$(lib).a)
 
@@ -751,7 +753,7 @@ APP_LD_ARGS += --start-group
 APP_LD_ARGS += -L$(dir $(LIBGCC_FILE_NAME)) -lgcc
 APP_LD_ARGS += -L$(dir $(LIBSTDCXX_FILE_NAME)) -lstdc++
 APP_LD_ARGS += $(LIBC_LIBM)
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 APP_LD_ARGS += -L$(ESPCOMP)/xtensa/esp32 -lhal
 APP_LD_ARGS += -L$(ESPCOMP)/bt/controller/lib -lbtdm_app
 APP_LD_ARGS += -L$(ESPCOMP)/esp_wifi/lib_esp32 -lcore -lmesh -lnet80211 -lphy -lrtc -lpp -lsmartconfig -lcoexist
@@ -798,7 +800,7 @@ $(BUILD)/%.o: %.cpp
 BOOTLOADER_LIB_DIR = $(BUILD)/bootloader
 BOOTLOADER_LIB_ALL =
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 $(BUILD)/bootloader/$(ESPCOMP)/%.o: CFLAGS += -DBOOTLOADER_BUILD=1 -I$(ESPCOMP)/bootloader_support/include_priv -I$(ESPCOMP)/bootloader_support/include -I$(ESPCOMP)/efuse/include -I$(ESPCOMP)/esp_rom/include -Wno-error=format \
 	-I$(ESPCOMP)/esp_common/include \
 	-I$(ESPCOMP)/xtensa/include \
@@ -823,7 +825,7 @@ BOOTLOADER_LIB_BOOTLOADER_SUPPORT_OBJ = $(addprefix $(BUILD)/bootloader/$(ESPCOM
 	bootloader_support/src/flash_partitions.o \
 	)
 
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 BOOTLOADER_LIB_BOOTLOADER_SUPPORT_OBJ += $(addprefix $(BUILD)/bootloader/$(ESPCOMP)/,\
 	bootloader_support/src/esp32/bootloader_sha.o \
 	bootloader_support/src/bootloader_flash_config.o \
@@ -918,7 +920,7 @@ BOOTLOADER_LIBS =
 BOOTLOADER_LIBS += -Wl,--start-group
 BOOTLOADER_LIBS += $(BOOTLOADER_OBJ)
 BOOTLOADER_LIBS += -L$(BUILD)/bootloader $(addprefix -l,$(BOOTLOADER_LIB_ALL))
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 BOOTLOADER_LIBS += -L$(ESPCOMP)/esp_wifi/lib_esp32 -lrtc
 else
 BOOTLOADER_LIBS += -L$(ESPCOMP)/esp32/lib -lrtc
@@ -937,7 +939,7 @@ BOOTLOADER_LDFLAGS += -Wl,-EL
 BOOTLOADER_LDFLAGS += -Wl,-Map=$(@:.elf=.map) -Wl,--cref
 BOOTLOADER_LDFLAGS += -T $(ESPCOMP)/bootloader/subproject/main/esp32.bootloader.ld
 BOOTLOADER_LDFLAGS += -T $(ESPCOMP)/bootloader/subproject/main/esp32.bootloader.rom.ld
-ifeq ($(ESPIDF_CURHASH),$(ESPIDF_SUPHASH_V4))
+ifeq ($(ESPIDF_VER),4)
 BOOTLOADER_LDFLAGS += -T $(ESPCOMP)/esp_rom/esp32/ld/esp32.rom.ld
 BOOTLOADER_LDFLAGS += -T $(ESPCOMP)/esp_rom/esp32/ld/esp32.rom.newlib-funcs.ld
 else
