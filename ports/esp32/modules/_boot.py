@@ -64,8 +64,11 @@ if ntpcfg.get('enabled'):
 # Start webrepl
 wrcfg = config('webrepl')
 if wrcfg.get('enabled'):
-    import webrepl
-    webrepl.start()
+    try:
+        import webrepl
+        webrepl.start()
+    except ImportError:
+        print("Error: Webrepl enabled but module not found")
 
 # Cleanup
 gc.collect()
